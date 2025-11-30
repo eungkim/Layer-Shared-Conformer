@@ -1,0 +1,79 @@
+name: d512_n20_midseq_B3_R4x4_E1
+
+architecture: midseq
+
+tokenizer:
+  vocab_size: 128
+
+specaug:
+  freq_masks: 2 # set to zero to disable it
+  time_masks: 10 # set to zero to disable it
+  freq_width: 27
+  time_width: 0.05
+
+preprocessor:
+  sample_rate: 16000
+  normalize: "per_feature"
+  window_size: 0.025
+  window_stride: 0.01
+  window: "hann"
+  features: 80
+  n_fft: 512
+  log: true
+  frame_splicing: 1
+  dither: 0.00001
+  pad_to: 0
+  pad_value: 0.0
+
+encoder:
+  feat_in: 80
+  feat_out: -1 # you may set it if you need different output size other than the default d_model
+  n_layers: 8
+  d_model: 512
+  n_recur: 4
+
+  # Sub-sampling params
+  subsampling: striding # vggnet, striding, stacking or stacking_norm, dw_striding
+  subsampling_factor: 4 # must be power of 2 for striding and vggnet
+  subsampling_conv_channels: -1 # -1 sets it to d_model
+  causal_downsampling: false
+
+  # Feed forward module's params
+  ff_expansion_factor: 4
+
+  # Multi-headed Attention Module's params
+  self_attention_model: rel_pos # rel_pos or abs_pos
+  n_heads: 8 # may need to be lower for smaller d_models
+  # [left, right] specifies the number of steps to be seen from left and right of each step in self-attention
+  att_context_size: [-1, -1] # -1 means unlimited context
+  att_context_style: regular # regular or chunked_limited
+  xscaling: true # scales up the input embeddings by sqrt(d_model)
+  untie_biases: true # unties the biases of the TransformerXL layers
+  pos_emb_max_len: 5000
+
+  # Convolution module's params
+  conv_kernel_size: 31
+  conv_norm_type: 'layer_norm' # batch_norm or layer_norm or groupnormN (N specifies the number of groups)
+  # conv_context_size can be"causal" or a list of two integers while conv_context_size[0]+conv_context_size[1]+1==conv_kernel_size
+  # null means [(kernel_size-1)//2, (kernel_size-1)//2], and 'causal' means [(kernel_size-1), 0]
+  conv_context_size: null
+
+  ### regularization
+  dropout: 0.1 # The dropout used in most of the Conformer Modules
+  dropout_pre_encoder: 0.1 # The dropout used before the encoder
+  dropout_emb: 0.0 # The dropout used for embeddings
+  dropout_att: 0.1 # The dropout for multi-headed attention modules
+
+  # set to non-zero to enable stochastic depth
+  stochastic_depth_drop_prob: 0.0
+  stochastic_depth_mode: linear  # linear or uniform
+  stochastic_depth_start_layer: 1
+
+# config for InterCTC loss: https://arxiv.org/abs/2102.03216
+# specify loss weights and which layers to use for InterCTC
+# e.g., to reproduce the paper results, set loss_weights: [0.3]
+# and apply_at_layers: [8] (assuming 18 layers). Note that final
+# layer loss coefficient is automatically adjusted (to 0.7 in above example)
+interctc:
+  loss_weights: []
+  apply_at_layers: []
