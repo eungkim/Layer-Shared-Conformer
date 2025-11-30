@@ -11,4 +11,4 @@ The models are trained with Sentencepiece tokenizer with 128 tokens using CTC.
 The backbone of the Conformer-CTC model has 20 layers with 512 hidden dimension and 2048 ffn dimension as shown in the config files.
 
 ## Inference
-Before implementation, please download the trained model in advance and locate your csv files on accurate directory for inference.
+Before implementation, please download the trained model (Mid-Seq ([link](https://drive.google.com/file/d/1KjFZcK8Xkt1pjPphdSqA-u96T-nDFqQu/view?usp=share_link)), conventional model ([link](https://drive.google.com/file/d/11qfKFH-WlZQDfNBJOmePXzFx4ZEn-lBh/view?usp=sharing))) in advance and locate your csv files on accurate directory for inference.
