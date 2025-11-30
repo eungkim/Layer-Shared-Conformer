@@ -9,3 +9,6 @@ The layer-shared Conformer has 15M parameters but has the same number of operati
 ## Training detail
 The models are trained with Sentencepiece tokenizer with 128 tokens using CTC.
 The backbone of the Conformer-CTC model has 20 layers with 256 hidden dimension and 1024 ffn dimension as shown in the config files.
+
+## Inference
+For inference, this code utilizes inference.py to load the config files, tokenizers, and trained models. You should download the trained model in advance for inference.
